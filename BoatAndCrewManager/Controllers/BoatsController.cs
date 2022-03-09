@@ -29,7 +29,16 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Controllers
            
             return Ok(response);
         }
+        [HttpDelete("/api/boats/delete")]
+        public IActionResult DelateABoat(string id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values);
 
+            _boatService.Delete(id);
+
+            return Ok();
+        }
         [HttpPut("/api/boats/update")]
         public IActionResult Update(CreateBoatSchema model, string id)
         {

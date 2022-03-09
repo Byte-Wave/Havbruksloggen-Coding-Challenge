@@ -28,7 +28,7 @@ export class BoatAdd extends Component<BoatAddProps> {
         const data = await response.json();
         this.setState({
             boats: data.result,
-            loading: false
+            loading: true
         });
     }
     // @ts-ignore

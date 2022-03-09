@@ -9,6 +9,8 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories
         public BoatEntity Get(Guid id);
         public List<BoatEntity> GetAll();
         public List<BoatEntity> List(int page, int itemsPerPage);
+        public void Delete(Guid id);
+        public BoatEntity Update(BoatEntity entity);
     }
     public class BoatRepository : IBoatRepository
     {
@@ -23,7 +25,18 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories
             _context.Boats.Add(entity);
             _context.SaveChanges();
         }
-
+        public BoatEntity Update(BoatEntity entity)
+        {
+            _context.Boats.Update(entity);
+            _context.SaveChanges();
+            return entity;
+        }
+        public void Delete(Guid id)
+        {
+            var entity = Get(id);
+            _context.Boats.Remove(entity);
+            _context.SaveChanges();
+        }
         public BoatEntity Get(Guid id)
         {
            return _context.Boats.First(c => c.Id == id);

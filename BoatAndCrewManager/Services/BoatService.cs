@@ -12,6 +12,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
         public BoatResponse Create(CreateBoatSchema model);
         public List<BoatResponse> GetAll();
         public List<BoatResponse> List(int page, int itemsPerPage);
+        public void Delete(string id);
     }
     public class BoatService : IBoatService
     {
@@ -180,6 +181,16 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
             }
 
             return response;
+        }
+
+        public void Delete(string id)
+        {
+            if (Guid.TryParse(id, out Guid result))
+            {
+                _boatRepository.Delete(result);
+            }
+
+            
         }
     }
 }
