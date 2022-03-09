@@ -18,5 +18,14 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Validation
 
         [Required]
         public float MaximumWidth { get; set; }
+
+        [Required]
+        public string Picture { get; set; }
+
+        [Required]
+        public string PictureName { get; set; }
+
+        [Required]
+        public string PictureType { get; set; }
     }
 }

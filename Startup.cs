@@ -1,4 +1,5 @@
 ﻿using Havbruksloggen_Coding_Challenge.Shared.Helpers;
+using Havbruksloggen_Coding_Challenge.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Havbruksloggen_Coding_Challenge
@@ -15,9 +16,10 @@ namespace Havbruksloggen_Coding_Challenge
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            ConnectionString = connectionString;
+            ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+            var rootFilePath = Configuration.GetValue<string>("FilesPath");
 
+            services.AddScoped<PathMaker>(c=> new PathMaker(rootFilePath));
             services.AddCors();
             services.AddControllers();
             services.AddRazorPages();

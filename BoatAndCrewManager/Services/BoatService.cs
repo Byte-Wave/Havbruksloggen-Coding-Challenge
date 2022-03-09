@@ -1,7 +1,9 @@
-﻿using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Responses;
+﻿using System.Text;
+using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Responses;
 using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Validation;
 using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories;
 using Havbruksloggen_Coding_Challenge.BoatAndCrewMemberManager.Models.Database.Entities;
+using Havbruksloggen_Coding_Challenge.Shared.Services;
 
 namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
 {
@@ -14,9 +16,27 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
     public class BoatService : IBoatService
     {
         private IBoatRepository _boatRepository;
-        public BoatService(IBoatRepository boatRepository)
+
+        private PathMaker _pathMaker;
+        public BoatService(IBoatRepository boatRepository, PathMaker pathMaker)
         {
             _boatRepository = boatRepository;
+            _pathMaker = pathMaker;
+            _pathMaker.Service = "Boats";
+        }
+
+        private string SaveImage(string base64, string extension)
+        {
+            string[] parts = base64.Split("base64,");
+            byte[] bytes = Convert.FromBase64String(parts[1]);
+            var timeStamp = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            var path = _pathMaker.MakePath($"{timeStamp}.{extension}");
+            using (FileStream fs = new FileStream(path, FileMode.CreateNew))
+            {
+                fs.Write(bytes);
+            }
+
+            return path;
         }
 
         public BoatResponse Create(CreateBoatSchema model)
@@ -24,6 +44,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
             BoatResponse response = new BoatResponse();
             try
             {
+                var path = SaveImage(model.Picture, model.PictureName.Split(".").Last());
                 BoatEntity entity = new BoatEntity()
                 {
                     Name = model.Name,
@@ -31,7 +52,8 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                     BuildNumber = model.BuildNumber,
                     MaximumLength = model.MaximumLength,
                     MaximumWidth = model.MaximumWidth,
-                    PicturesPath = ""
+                    // todo in future store relative not absolute path
+                    PicturesPath = path
                 };
 
                 _boatRepository.Create(entity);
@@ -57,7 +79,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
 
         public BoatResponse Update(CreateBoatSchema model, string id)
         {
-
+            throw new Exception();
         }
 
         public List<BoatResponse> GetAll()

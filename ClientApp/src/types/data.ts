@@ -9,6 +9,8 @@ export interface IBoat {
     maximumLength: number;
     maximumWidth: number;
     picture: string;
+    pictureName: string;
+    pictureType: string;
     crew: ICrewMember[];
 }
 export class Boat implements IBoat{
@@ -19,6 +21,8 @@ export class Boat implements IBoat{
     maximumLength: number;
     maximumWidth: number;
     picture: string;
+    pictureName: string;
+    pictureType: string;
     crew: ICrewMember[];
 
     constructor(
@@ -29,6 +33,8 @@ export class Boat implements IBoat{
         maximumLength: number = 0,
         maximumWidth: number = 0,
         picture: string = "",
+        pictureName: string = "",
+        pictureType: string = "",
         crew: ICrewMember[] = []) {
         this.id = id;
         this.name = name;
@@ -37,6 +43,8 @@ export class Boat implements IBoat{
         this.maximumLength = maximumLength;
         this.maximumWidth = maximumWidth;
         this.picture = picture;
+        this.pictureName = picture;
+        this.pictureType = picture;
         this.crew = crew;
 
     }

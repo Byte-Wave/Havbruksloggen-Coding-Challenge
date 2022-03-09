@@ -62,7 +62,10 @@ export class BoatAdd extends Component<BoatAddProps> {
         this.getBase64(file)
             .then(result => {
                 file["base64"] = result;
+                console.log(file);
                 this.boat.picture = file["base64"];
+                this.boat.pictureName = file["name"];
+                this.boat.pictureType = file["type"];
             })
             .catch(err => {
                 console.log(err);
