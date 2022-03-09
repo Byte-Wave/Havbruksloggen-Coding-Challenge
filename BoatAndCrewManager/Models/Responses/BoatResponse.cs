@@ -8,6 +8,8 @@
         public int BuildNumber { get; set; }
         public double MaximumLength { get; set; }
         public double MaximumWidth { get; set; }
-        public string PictureUrl { get; set; }
+        public string Picture{ get; set; }
+        public string PictureName { get; set; }
+        public string PictureType{ get; set; }
     }
 }

@@ -6,6 +6,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories
     public interface IBoatRepository
     {
         public void Create(BoatEntity entity);
+        public BoatEntity Get(Guid id);
         public List<BoatEntity> GetAll();
         public List<BoatEntity> List(int page, int itemsPerPage);
     }
@@ -21,6 +22,11 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories
         {
             _context.Boats.Add(entity);
             _context.SaveChanges();
+        }
+
+        public BoatEntity Get(Guid id)
+        {
+           return _context.Boats.First(c => c.Id == id);
         }
 
         public List<BoatEntity> GetAll()

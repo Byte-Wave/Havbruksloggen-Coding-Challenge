@@ -11,10 +11,14 @@
             RootPath = rootPath;
         }
 
+        public string GetDirectoryPath()
+        {
+            return Directory.CreateDirectory(Path.Combine(RootPath, Service)).FullName;
+        }
+
         public string MakePath (string filename)
         {
-            var directoryInfo = Directory.CreateDirectory(Path.Combine(RootPath, Service));
-            return Path.Combine(directoryInfo.FullName, filename);
+            return Path.Combine(GetDirectoryPath(), filename);
         }
         
     }

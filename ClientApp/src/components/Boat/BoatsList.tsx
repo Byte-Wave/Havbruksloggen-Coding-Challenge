@@ -71,7 +71,7 @@ export class BoatsList extends Component<{}, BoatProps> {
         const response = await fetch('/api/boats/all');
 
         const data = await response.json();
-
+        console.log(data)
         this.setState({
             boats: data.result,
             loading: false
