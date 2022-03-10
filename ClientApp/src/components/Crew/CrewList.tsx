@@ -10,6 +10,7 @@ import Nav from 'react-bootstrap/Nav'
 import ReactModal from 'react-modal';
 import {Boats} from "../Boat/Boats";
 import {Crew} from "./Crew";
+import {CrewRole} from "../../types/enums";
 
 interface CrewListProps {
     crewComponent: Crew
@@ -67,7 +68,7 @@ export class CrewList extends Component<CrewListProps, CrewListState> {
         const requestOptions = {
             method: 'DELETE'
         };
-        await fetch('/api/boats/delete?id='+id, requestOptions)
+        await fetch('/api/crew/delete?id='+id, requestOptions)
             .then(async (response)=>{
                 const data = response.json();
                 this.setState({
@@ -116,10 +117,9 @@ export class CrewList extends Component<CrewListProps, CrewListState> {
                     <tr>
                         <th></th>
                         <th>Name</th>
-                        <th>Producer</th>
-                        <th>Build Number</th>
-                        <th>LOA</th>
-                        <th>B</th>
+                        <th>Age</th>
+                        <th>Role</th>
+                        <th>Email</th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -136,27 +136,15 @@ export class CrewList extends Component<CrewListProps, CrewListState> {
                                 </Image>
                             </td>
                             <td>{crewMember.name}</td>
-                            <td>{crewMember.name}</td>
-                            <td>{crewMember.name}</td>
-                            <td>{crewMember.name}</td>
-                            <td>{crewMember.name}</td>
-                            <td>
-                                <Badge
-                                    bg="dark"
-                                    onClick={
-                                        () => {
-
-                                        }
-                                    }
-                                >Crew
-                                </Badge>
-                            </td>
+                            <td>{crewMember.age}</td>
+                            <td>{CrewRole[crewMember.role]}</td>
+                            <td>{crewMember.email}</td>
                             <td>
                                 <Badge
                                     bg="warning"
                                     onClick={
                                         () => {
-                                            //this.handleOpenEditBoatModal(boat);
+                                            this.handleOpenEditBoatModal(crewMember);
                                         }
                                     }
                                 >Edit
@@ -167,7 +155,7 @@ export class CrewList extends Component<CrewListProps, CrewListState> {
                                     bg="danger"
                                     onClick={
                                         () => {
-                                            //this.deleteFunc(boat.id);
+                                            this.deleteFunc(crewMember.id);
                                         }
                                     }
                                 >Delete
@@ -210,11 +198,8 @@ export class CrewList extends Component<CrewListProps, CrewListState> {
     }
 
     async populateBoatData() {
-        console.log("Sending Request for crew")
         const response = await fetch('/api/crew/all');
-        console.log(response)
         const data = await response.json();
-        console.log(data)
         this.setState({
             crewMembers: data.result,
             loading: false,

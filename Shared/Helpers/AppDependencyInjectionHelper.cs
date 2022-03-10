@@ -14,12 +14,15 @@ namespace Havbruksloggen_Coding_Challenge.Shared.Helpers
 
 
             services.AddTransient<BoatAndCrewDbContext>();
+
+            services.AddScoped<ICrewRepository, CrewRepository>();
+            services.AddScoped<ICrewService, CrewService>();
+
             services.AddScoped<IBoatRepository, BoatRepository>();
             services.AddScoped<IBoatService, BoatService>();
 
           
-            services.AddScoped<ICrewRepository, CrewRepository>();
-            services.AddScoped<ICrewService, CrewService>();
+    
 
         }
     }

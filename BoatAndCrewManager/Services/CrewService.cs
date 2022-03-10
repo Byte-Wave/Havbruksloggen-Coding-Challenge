@@ -23,6 +23,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
         {
             _crewRepository = crewRepository;
             _pathMaker = pathMaker;
+            _pathMaker.Service = "Crew";
         }
 
         // todo usually these Image methods should be in a seperate helper since they are duplicate from BoatService
@@ -64,8 +65,8 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                     Email = model.Email,
                     Age = model.Age,
                     BoatId = Guid.Parse(model.BoatId),
-                    Role = model.Role,
-                    CertifiedUntil = DateOnly.FromDateTime(model.CertifiedUntil.Date),
+                    Role = (CrewRole)model.Role,
+                    CertifiedUntil = DateOnly.FromDateTime(DateTime.Parse(model.CertifiedUntil)),
                     PicturesPath = path
                 };
 
@@ -78,7 +79,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                     Email = entity.Email,
                     Age = entity.Age,
                     BoatId = entity.BoatId.ToString(),
-                    CertifiedUntil = entity.CertifiedUntil,
+                    CertifiedUntil = entity.CertifiedUntil.ToString("yyyy-MM-dd"),
                     Role = entity.Role,
                     Picture = GetBase64Image(entity.PicturesPath),
                     PictureName = pictureName,
@@ -110,7 +111,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                     Age = entity.Age,
                     Email = entity.Email,
                     Role = entity.Role,
-                    CertifiedUntil = entity.CertifiedUntil,
+                    CertifiedUntil = entity.CertifiedUntil.ToString("yyyy-MM-dd"),
                     Picture = $"data: {mimeType};base64, {GetBase64Image(entity.PicturesPath)}",
                     PictureName = pictureName,
                     PictureType = mimeType
@@ -129,12 +130,62 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
 
         public CrewMemberResponse Update(CreateCrewMemberSchema model, string id)
         {
-            throw new NotImplementedException();
+            CrewMemberResponse response = null;
+            if (Guid.TryParse(id, out Guid result) && Guid.TryParse(model.BoatId, out Guid boatIdGuid))
+            {
+                try
+                {
+
+                    CrewMemberEntity entity = _crewRepository.Get(result);
+                    entity.Name = model.Name;
+                    entity.Age = model.Age;
+                    entity.BoatId = boatIdGuid;
+                    entity.CertifiedUntil = DateOnly.Parse(model.CertifiedUntil);
+                    entity.Email = model.Email;
+                    entity.Role = (CrewRole)model.Role;
+
+                    if (!string.IsNullOrEmpty(model.Picture))
+                    {
+                        string path = SaveImage(model.Picture, model.PictureName.Split(".").Last());
+                        entity.PicturesPath = path;
+                    }
+
+                    _crewRepository.Update(entity);
+                    var pictureName = Path.GetRelativePath(_pathMaker.GetDirectoryPath(), entity.PicturesPath);
+                    var mimeType = MimeTypes.GetMimeType(pictureName);
+
+                    response = new CrewMemberResponse()
+                    {
+                        Id = entity.Id.ToString(),
+                        Name = entity.Name,
+                        Age = entity.Age,
+                        Email = entity.Email,
+                        Role = entity.Role,
+                        CertifiedUntil = entity.CertifiedUntil.ToString("yyyy-MM-dd"),
+                        Picture = $"data: {mimeType};base64, {GetBase64Image(entity.PicturesPath)}",
+                        PictureName = pictureName,
+                        PictureType = mimeType
+
+                    };
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+
+
+            }
+
+            return response;
         }
 
         public void Delete(string id)
         {
-            throw new NotImplementedException();
+            if (Guid.TryParse(id, out Guid result))
+            {
+                _crewRepository.Delete(result);
+            }
         }
     }
 }

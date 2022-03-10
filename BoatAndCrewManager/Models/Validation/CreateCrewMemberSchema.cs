@@ -6,30 +6,32 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Validation
     public class CreateCrewMemberSchema
     {
 
-        [Required]
+       
+        
+        public string Id { get; set; }
         public string Name { get; set; }
 
-        [Required]
+
         public int Age { get; set; }
 
-        [Required]
+  
         public string Email { get; set; }
 
-        [Required]
-        public CrewRole Role { get; set; }
+ 
+        public int Role { get; set; }
 
-        [Required]
-        public DateTime CertifiedUntil { get; set; }
 
-        [Required]
+        public string CertifiedUntil { get; set; }
+
+ 
         public string BoatId { get; set; }
 
         public string Picture { get; set; }
 
-        [Required]
+    
         public string PictureName { get; set; }
 
-        [Required]
+
         public string PictureType { get; set; }
     }
 }

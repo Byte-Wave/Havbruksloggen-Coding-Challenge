@@ -37,7 +37,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Database.Map
                 .HasColumnType("int");
 
             builder.Property(c => c.Email)
-                .HasColumnName("pictures_path")
+                .HasColumnName("email")
                 .HasColumnType("varchar(50)")
                 .HasMaxLength(50);
 

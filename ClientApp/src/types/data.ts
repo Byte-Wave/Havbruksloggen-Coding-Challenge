@@ -56,8 +56,8 @@ export interface ICrewMember {
     age: number;
     email: string;
     role: CrewRole;
-    certifiedUntil: number;
-    boatId: number;
+    certifiedUntil: string;
+    boatId: string;
     picture: string;
     pictureName: string;
     pictureType: string;
@@ -69,8 +69,8 @@ export class CrewMember implements ICrewMember {
     age: number;
     email: string;
     role: CrewRole;
-    certifiedUntil: number;
-    boatId: number;
+    certifiedUntil: string;
+    boatId: string;
     picture: string;
     pictureName: string;
     pictureType: string;
@@ -81,8 +81,8 @@ export class CrewMember implements ICrewMember {
         age: number = 0,
         email: string = "",
         role: CrewRole = CrewRole.DeckCadet,
-        certifiedUntil: number = Date.now(),
-        boatId: number = 0,
+        certifiedUntil: string ="",
+        boatId: string = "",
         picture: string = "",
         pictureName: string = "",
         pictureType: string = "",) {

@@ -10,7 +10,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Responses
         public int Age { get; set; }
         public string Email { get; set; }
         public CrewRole Role { get; set; }
-        public DateOnly CertifiedUntil { get; set; }
+        public string CertifiedUntil { get; set; }
         public string Picture{ get; set; }
         public string PictureName { get; set; }
         public string PictureType{ get; set; }

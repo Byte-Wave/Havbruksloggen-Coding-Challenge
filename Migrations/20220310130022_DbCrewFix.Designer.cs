@@ -3,6 +3,7 @@ using System;
 using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Havbruksloggen_Coding_Challenge.Migrations
 {
     [DbContext(typeof(BoatAndCrewDbContext))]
-    partial class BoatAndCrewDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220310130022_DbCrewFix")]
+    partial class DbCrewFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

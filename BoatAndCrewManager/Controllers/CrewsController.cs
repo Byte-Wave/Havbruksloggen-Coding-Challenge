@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/crew")]
     [ApiController]
     public class CrewController : ControllerBase
     {
@@ -29,6 +29,18 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Controllers
             return Ok(response);
         }
 
+        [HttpPut("/api/crew/update")]
+        public IActionResult Update(CreateCrewMemberSchema model, string id)
+        {
+            HttpResponse<CrewMemberResponse> response = new HttpResponse<CrewMemberResponse>();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values);
+            Console.WriteLine(model.Name);
+            response.Result = _crewService.Update(model, id);
+
+            return Ok(response);
+        }
+
         [HttpGet("/api/crew/all")]
         public JsonResult GetAllCrewMembers()
         {
@@ -38,6 +50,17 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Controllers
             //return Ok(response);
             Console.WriteLine(response);
             return new JsonResult(response);
+        }
+
+        [HttpDelete("/api/crew/delete")]
+        public IActionResult DelateABoat(string id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.Values);
+
+            _crewService.Delete(id);
+
+            return Ok();
         }
     }
 }
