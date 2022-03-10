@@ -45,12 +45,11 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Controllers
             HttpResponse<BoatResponse> response = new HttpResponse<BoatResponse>();
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.Values);
-
-            response.Result = _boatService.Create(model);
+            Console.WriteLine(model.Name);
+            response.Result = _boatService.Update(model,id);
 
             return Ok(response);
         }
-
 
         [HttpGet("/api/boats/all")]
         public JsonResult GetAllBoats()

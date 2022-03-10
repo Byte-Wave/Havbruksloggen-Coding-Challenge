@@ -4,51 +4,27 @@ import { Button} from 'react-bootstrap';
 import {Boat} from '../../types/data';
 import {BoatsList} from "./BoatsList";
 
-interface BoatAddProps{
+interface BoatEditProps{
     boatListRef: BoatsList
 }
 
-export class BoatAdd extends Component<BoatAddProps> {
-    static displayName = BoatAdd.name;
+export class BoatEdit extends Component<BoatEditProps> {
+    static displayName = BoatEdit.name;
 
     boat: Boat = new Boat();
-    isEdit: boolean = false;
-    constructor(props: BoatAddProps) {
+    constructor(props: BoatEditProps) {
         super(props);
-        if (props.boatListRef.state.selectedBoat != null) {
-            this.boat = props.boatListRef.state.selectedBoat;
-            this.isEdit = true;
-            this.boat.picture = "";
-        }
-        else {
-            this.boat = new Boat();
-            this.isEdit = false;
-        }
         this.state = {
         };
     }
 
-    async sendCreateBoatData(boat:Boat) {
+    async sendBoatData(boat:Boat) {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(boat)
         };
         const response = await fetch('/api/boats/create', requestOptions);
-
-        const data = await response.json();
-        this.setState({
-            boats: data.result,
-            loading: true
-        });
-    }
-    async sendUpdateBoatData(boat:Boat) {
-        const requestOptions = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(boat)
-        };
-        const response = await fetch('/api/boats/update?id='+boat.id, requestOptions);
 
         const data = await response.json();
         this.setState({
@@ -106,17 +82,9 @@ export class BoatAdd extends Component<BoatAddProps> {
         this.boat.maximumWidth = event.target.maximumWidth.value;
         //this.boat.picture = event.target.picture.value.
         console.log(this.boat);
-        if(this.isEdit){
-            this.sendUpdateBoatData(this.boat).then(()=>{
-                this.props.boatListRef.populateBoatData();
-            });
-        }
-        else {
-            this.sendCreateBoatData(this.boat).then(()=>{
-                this.props.boatListRef.populateBoatData();
-            });
-        }
-
+        this.sendBoatData(this.boat).then(()=>{
+            this.props.boatListRef.populateBoatData();
+        });
 
 
     }
@@ -127,7 +95,7 @@ export class BoatAdd extends Component<BoatAddProps> {
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group className="mb-3" controlId="boatFormName">
                         <Form.Label>Name</Form.Label>
-                        <Form.Control type="text" defaultValue={this.boat.name} placeholder="Black Pearl" name="name"/>
+                        <Form.Control type="text" placeholder="Black Pearl" name="name"/>
                         <Form.Text className="text-muted">
                             Name of the Boat.
                         </Form.Text>
@@ -135,7 +103,7 @@ export class BoatAdd extends Component<BoatAddProps> {
 
                     <Form.Group className="mb-3" controlId="boatFormProd">
                         <Form.Label>Producer</Form.Label>
-                        <Form.Control type="text" defaultValue={this.boat.producer} placeholder="BMW" name="producer" />
+                        <Form.Control type="text" placeholder="BMW" name="producer" />
                         <Form.Text className="text-muted">
                             Producer of the Boat.
                         </Form.Text>
@@ -143,7 +111,7 @@ export class BoatAdd extends Component<BoatAddProps> {
 
                     <Form.Group className="mb-3" controlId="boatFormBuildNum">
                         <Form.Label>Build Number</Form.Label>
-                        <Form.Control type="number" defaultValue={this.boat.buildNumber} placeholder="1233" name="buildNumber"/>
+                        <Form.Control type="number" placeholder="1233" name="buildNumber"/>
                         <Form.Text className="text-muted">
                             Build Number of the Boat.
                         </Form.Text>
@@ -151,7 +119,7 @@ export class BoatAdd extends Component<BoatAddProps> {
 
                     <Form.Group className="mb-3" controlId="boatFormLOA">
                         <Form.Label>LOA</Form.Label>
-                        <Form.Control type="text" defaultValue={this.boat.maximumLength} placeholder="8.6" name="maximumLength"/>
+                        <Form.Control type="number" placeholder="8.6" name="maximumLength"/>
                         <Form.Text className="text-muted">
                             Maximum length of boat, in meters.
                         </Form.Text>
@@ -159,14 +127,14 @@ export class BoatAdd extends Component<BoatAddProps> {
 
                     <Form.Group className="mb-3" controlId="boatFormB">
                         <Form.Label>B</Form.Label>
-                        <Form.Control type="text" defaultValue={this.boat.maximumWidth} placeholder="2.3" name="maximumWidth"/>
+                        <Form.Control type="number" placeholder="2.3" name="maximumWidth"/>
                         <Form.Text className="text-muted">
                             Maximum width of boat, in meters.
                         </Form.Text>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="boatFormPhoto">
-                        <Form.Label>Picture</Form.Label>
+                        <Form.Label>B</Form.Label>
                         <Form.Control type="file" accept="image/*" name="picture" onInput={this.handleFileInputChange}/>
                         <Form.Text className="text-muted">
                            Picture of the boat.

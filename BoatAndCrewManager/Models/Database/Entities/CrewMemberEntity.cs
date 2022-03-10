@@ -3,11 +3,8 @@
     public class CrewMemberEntity
     {
         public Guid Id { get; set; }
-
         public Guid BoatId { get; set; }
         public virtual BoatEntity Boat { get; set; }
-
-
         public string Name { get; set; }
         public int Age { get; set; }    
         public string Email { get; set; }

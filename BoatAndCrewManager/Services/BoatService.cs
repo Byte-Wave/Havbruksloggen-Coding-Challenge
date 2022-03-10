@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Responses;
 using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Models.Validation;
 using Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories;
@@ -12,13 +13,14 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
         public BoatResponse Create(CreateBoatSchema model);
         public List<BoatResponse> GetAll();
         public List<BoatResponse> List(int page, int itemsPerPage);
+        BoatResponse Update(CreateBoatSchema model, string id);
         public void Delete(string id);
     }
     public class BoatService : IBoatService
     {
-        private IBoatRepository _boatRepository;
+        private readonly IBoatRepository _boatRepository;
 
-        private PathMaker _pathMaker;
+        private readonly PathMaker _pathMaker;
         public BoatService(IBoatRepository boatRepository, PathMaker pathMaker)
         {
             _boatRepository = boatRepository;
@@ -99,16 +101,26 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
 
         public BoatResponse Update(CreateBoatSchema model, string id)
         {
-            throw new Exception();
-        }
-        public BoatResponse Get(string id)
-        {
             BoatResponse response = null;
-            try
+            if (Guid.TryParse(id, out Guid result))
             {
-                if (Guid.TryParse(id, out Guid result))
+                try
                 {
-                    var entity = _boatRepository.Get(result);
+
+                    BoatEntity entity = _boatRepository.Get(result);
+                    entity.Name = model.Name;
+                    entity.Producer = model.Producer;
+                    entity.BuildNumber = model.BuildNumber;
+                    entity.MaximumLength = model.MaximumLength;
+                    entity.MaximumWidth = model.MaximumWidth;
+
+                    if (!string.IsNullOrEmpty(model.Picture))
+                    {
+                        string path = SaveImage(model.Picture, model.PictureName.Split(".").Last());
+                        entity.PicturesPath = path;
+                    }
+
+                    _boatRepository.Update(entity);
                     var pictureName = Path.GetRelativePath(_pathMaker.GetDirectoryPath(), entity.PicturesPath);
                     response = new BoatResponse()
                     {
@@ -121,6 +133,40 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                         Picture = GetBase64Image(entity.PicturesPath),
                         PictureName = pictureName,
                         PictureType = MimeTypes.GetMimeType(pictureName)
+                    };
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+
+
+            }
+
+            return response;
+        }
+        public BoatResponse Get(string id)
+        {
+            BoatResponse response = null;
+            try
+            {
+                if (Guid.TryParse(id, out Guid result))
+                {
+                    var entity = _boatRepository.Get(result);
+                    var pictureName = Path.GetRelativePath(_pathMaker.GetDirectoryPath(), entity.PicturesPath);
+                    var mimeType = MimeTypes.GetMimeType(pictureName);
+                    response = new BoatResponse()
+                    {
+                        Id = entity.Id.ToString(),
+                        Name = entity.Name,
+                        Producer = entity.Producer,
+                        BuildNumber = entity.BuildNumber,
+                        MaximumLength = entity.MaximumLength,
+                        MaximumWidth = entity.MaximumWidth,
+                        Picture = $"data: {mimeType};base64, {GetBase64Image(entity.PicturesPath)}",
+                        PictureName = pictureName,
+                        PictureType = mimeType
 
                     };
                 }
@@ -140,6 +186,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
             foreach (var entity in list)
             {
                 var pictureName = Path.GetRelativePath(_pathMaker.GetDirectoryPath(), entity.PicturesPath);
+                var mimeType = MimeTypes.GetMimeType(pictureName);
                 var item = new BoatResponse()
                 {
                     Id = entity.Id.ToString(),
@@ -148,14 +195,15 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                     BuildNumber = entity.BuildNumber,
                     MaximumLength = entity.MaximumLength,
                     MaximumWidth = entity.MaximumWidth,
-                    Picture = GetBase64Image(entity.PicturesPath),
+                    Picture = $"data: {mimeType};base64, {GetBase64Image(entity.PicturesPath)}",
                     PictureName = pictureName,
-                    PictureType = MimeTypes.GetMimeType(pictureName)
+                    PictureType = mimeType
+
                 };
                 response.Add(item);
             }
 
-            return response; throw new NotImplementedException();
+            return response;
         }
 
         public List<BoatResponse> List(int page, int itemsPerPage)
@@ -165,6 +213,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
             foreach (var entity in list)
             {
                 var pictureName = Path.GetRelativePath(_pathMaker.GetDirectoryPath(), entity.PicturesPath);
+                var mimeType = MimeTypes.GetMimeType(pictureName);
                 var item = new BoatResponse()
                 {
                     Id = entity.Id.ToString(),
@@ -173,9 +222,10 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                     BuildNumber = entity.BuildNumber,
                     MaximumLength = entity.MaximumLength,
                     MaximumWidth = entity.MaximumWidth,
-                    Picture = GetBase64Image(entity.PicturesPath),
+                    Picture = $"data: {mimeType};base64, {GetBase64Image(entity.PicturesPath)}",
                     PictureName = pictureName,
-                    PictureType = MimeTypes.GetMimeType(pictureName)
+                    PictureType = mimeType
+
                 };
                 response.Add(item);
             }
@@ -190,7 +240,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Services
                 _boatRepository.Delete(result);
             }
 
-            
+
         }
     }
 }

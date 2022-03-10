@@ -1,4 +1,4 @@
-﻿import { CrewRole } from "./enums";
+﻿import {CrewRole} from "./enums";
 
 
 export interface IBoat {
@@ -8,12 +8,13 @@ export interface IBoat {
     buildNumber: number;
     maximumLength: number;
     maximumWidth: number;
-    picture: string;
+    picture: string
     pictureName: string;
     pictureType: string;
     crew: ICrewMember[];
 }
-export class Boat implements IBoat{
+
+export class Boat implements IBoat {
     id: string;
     name: string;
     producer: string;
@@ -28,7 +29,7 @@ export class Boat implements IBoat{
     constructor(
         id: string = "",
         name: string = "",
-        producer:string = "",
+        producer: string = "",
         buildNumber: number = 0,
         maximumLength: number = 0,
         maximumWidth: number = 0,
@@ -46,18 +47,56 @@ export class Boat implements IBoat{
         this.pictureName = picture;
         this.pictureType = picture;
         this.crew = crew;
-
     }
 }
 
 export interface ICrewMember {
     id: string;
     name: string;
-    picture?: string;
     age: number;
     email: string;
     role: CrewRole;
-    certifiedUntil: Date;
+    certifiedUntil: number;
     boatId: number;
-    boat: IBoat;
+    picture: string;
+    pictureName: string;
+    pictureType: string;
+}
+
+export class CrewMember implements ICrewMember {
+    id: string;
+    name: string;
+    age: number;
+    email: string;
+    role: CrewRole;
+    certifiedUntil: number;
+    boatId: number;
+    picture: string;
+    pictureName: string;
+    pictureType: string;
+
+    constructor(
+        id: string = "",
+        name: string = "",
+        age: number = 0,
+        email: string = "",
+        role: CrewRole = CrewRole.DeckCadet,
+        certifiedUntil: number = Date.now(),
+        boatId: number = 0,
+        picture: string = "",
+        pictureName: string = "",
+        pictureType: string = "",) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.role = role;
+        this.certifiedUntil = certifiedUntil;
+        this.boatId = boatId;
+        this.picture = picture;
+        this.pictureName = picture;
+        this.pictureType = picture;
+    }
+
+
 }

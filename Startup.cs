@@ -17,13 +17,11 @@ namespace Havbruksloggen_Coding_Challenge
         public void ConfigureServices(IServiceCollection services)
         {
             ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            var rootFilePath = Configuration.GetValue<string>("FilesPath");
-
-            services.AddScoped<PathMaker>(c=> new PathMaker(rootFilePath));
+            
             services.AddCors();
             services.AddControllers();
             services.AddRazorPages();
-            services.ConfigureDependencies();
+            services.ConfigureDependencies(Configuration);
 
         }
 
@@ -33,11 +31,11 @@ namespace Havbruksloggen_Coding_Challenge
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
+                
             }
-
             app.UseCors(opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseStaticFiles();
-
+            
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             { 

@@ -14,7 +14,7 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories
     }
     public class BoatRepository : IBoatRepository
     {
-        private BoatAndCrewDbContext _context;
+        private readonly BoatAndCrewDbContext _context;
         public BoatRepository(BoatAndCrewDbContext context)
         {
             _context = context;
@@ -41,12 +41,10 @@ namespace Havbruksloggen_Coding_Challenge.BoatAndCrewManager.Repositories
         {
            return _context.Boats.First(c => c.Id == id);
         }
-
         public List<BoatEntity> GetAll()
         {
             return _context.Boats.ToList();
         }
-
         public List<BoatEntity> List(int page, int itemsPerPage)
         {
             return _context.Boats

@@ -12,3 +12,27 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+.button-margin{
+  margin-top: 0px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 0px;
+}
+.center{
+  height: 100px;
+  /*text-align: center;*/
+  vertical-align: middle;
+  border: 2px dashed #f69c55;
+}
+.input-dec {
+  line-height: 10px;
+  font-size: 18px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+li{
+
+}

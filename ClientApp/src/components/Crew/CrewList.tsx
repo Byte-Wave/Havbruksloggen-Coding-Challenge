@@ -1,64 +1,64 @@
+
 import React, {Component} from 'react';
-import {IBoat, Boat, ICrewMember} from '../../types/data';
-import {Boats} from "./Boats";
+import {IBoat, Boat, ICrewMember, CrewMember} from '../../types/data';
 import {map} from "react-bootstrap/ElementChildren";
 import Badge from 'react-bootstrap/Badge'
 import {Button, Image} from "react-bootstrap";
-import {BoatAdd} from "./BoatAdd";
+import {CrewAdd} from "./CrewAdd";
 import Nav from 'react-bootstrap/Nav'
 // @ts-ignore
 import ReactModal from 'react-modal';
-//import {Link} from "react-router-dom";
+import {Boats} from "../Boat/Boats";
+import {Crew} from "./Crew";
 
-interface BoatProps {
-    boatComponent: Boats
+interface CrewListProps {
+    crewComponent: Crew
 }
-
-interface BoatState {
-    boats: Boat[],
+interface CrewListState {
+    crewMembers: CrewMember[],
     loading: boolean,
-    showAddBoatModal: boolean,
-    selectedBoat: Boat | null
+    showAddCrewMemberModal: boolean,
+    selectedCrewMember: CrewMember | null
 }
 
-export class BoatsList extends Component<BoatProps, BoatState> {
-    static displayName = BoatsList.name;
-    private boats: Boat[] = [];
-    constructor(props: BoatProps) {
+export class CrewList extends Component<CrewListProps, CrewListState> {
+    static displayName = CrewList.name;
+    private crewMembers: CrewMember[] = [];
+
+    constructor({props}: { props: any }) {
         super(props);
         this.state = {
-            selectedBoat: null,
-            boats: [],
+            crewMembers: [],
             loading: true,
-            showAddBoatModal: false
+            showAddCrewMemberModal: false,
+            selectedCrewMember: null
         };
         this.handleOpenAddBoatModal = this.handleOpenAddBoatModal.bind(this);
         this.handleCloseAddBoatModal = this.handleCloseAddBoatModal.bind(this);
         this.handleOpenEditBoatModal = this.handleOpenEditBoatModal.bind(this);
-        this.redirectToCrew = this.redirectToCrew.bind(this);
     }
     handleOpenAddBoatModal() {
         this.setState({
-            showAddBoatModal: true,
-            selectedBoat: null
+            showAddCrewMemberModal: true,
+            selectedCrewMember: null
         });
     }
-    handleOpenEditBoatModal(boat: Boat) {
+    handleOpenEditBoatModal(boat: CrewMember) {
         this.setState({
-            showAddBoatModal: true,
-            selectedBoat: boat
+            showAddCrewMemberModal: true,
+            selectedCrewMember: boat
         });
     }
     async handleCloseAddBoatModal() {
         this.setState({
-            boats: [],
+            crewMembers: [],
             loading: true,
-            showAddBoatModal: false
+            showAddCrewMemberModal: false
         });
         setTimeout('', 500);
         await this.populateBoatData()
     }
-    
+
     componentDidMount() {
         this.populateBoatData();
     }
@@ -71,9 +71,9 @@ export class BoatsList extends Component<BoatProps, BoatState> {
             .then(async (response)=>{
                 const data = response.json();
                 this.setState({
-                    boats: [],
+                    crewMembers: [],
                     loading: true,
-                    showAddBoatModal: false
+                    showAddCrewMemberModal: false
                 });
                 setTimeout('', 500);
                 await this.populateBoatData()
@@ -82,14 +82,14 @@ export class BoatsList extends Component<BoatProps, BoatState> {
 
     }
 
-    renderBoatsTable: React.FC<Boat[]> = (boats: Boat[]) => {
+    renderCrewMembersTable: React.FC<CrewMember[]> = (crewMembers: CrewMember[]) => {
         return (
             <div>
                 <div>
                     <Nav variant="pills" defaultActiveKey="/home">
                         <Nav.Item>
                             <div>
-                                <Button variant="btn btn-primary" onClick={this.handleOpenAddBoatModal}>Add Boat</Button>
+                                <Button variant="btn btn-primary" onClick={this.handleOpenAddBoatModal}>Add Crew Member</Button>
                             </div>
                         </Nav.Item>
                         <Nav.Item>
@@ -98,9 +98,9 @@ export class BoatsList extends Component<BoatProps, BoatState> {
                                     variant="btn btn-primary"
                                     onClick={()=>{
                                         this.setState({
-                                            boats: [],
+                                            crewMembers: [],
                                             loading: true,
-                                            showAddBoatModal: false
+                                            showAddCrewMemberModal: false
                                         });
                                         setTimeout('', 500);
                                         this.populateBoatData()
@@ -111,7 +111,7 @@ export class BoatsList extends Component<BoatProps, BoatState> {
                         </Nav.Item>
                     </Nav>
                 </div>
-                <table className='table table-striped center' aria-labelledby="tabelLabel">
+                <table className='table table-striped' aria-labelledby="tabelLabel">
                     <thead>
                     <tr>
                         <th></th>
@@ -120,52 +120,58 @@ export class BoatsList extends Component<BoatProps, BoatState> {
                         <th>Build Number</th>
                         <th>LOA</th>
                         <th>B</th>
-                        <th>Actions</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {boats.map(boat =>
-                        <tr>
+                    {crewMembers.map(crewMember =>
+                        <tr className={"center"}>
                             <td>
                                 <Image
                                     height="100px"
-                                    src={boat.picture}
+                                    src={crewMember.picture}
                                 >
                                 </Image>
                             </td>
-                            <td>{boat.name}</td>
-                            <td>{boat.producer}</td>
-                            <td>{boat.buildNumber}</td>
-                            <td>{boat.maximumLength.toFixed(2)}</td>
-                            <td>{boat.maximumWidth.toFixed(2)}</td>
+                            <td>{crewMember.name}</td>
+                            <td>{crewMember.name}</td>
+                            <td>{crewMember.name}</td>
+                            <td>{crewMember.name}</td>
+                            <td>{crewMember.name}</td>
                             <td>
-                                <ul>
-                                    <li>
-                                        <Badge bg="dark" onClick={()=>{this.redirectToCrew(boat)}}>Crew</Badge>
-                                    </li>
-                                    <li>
-                                        <Badge
-                                            bg="warning"
-                                            onClick={
-                                                () => {
-                                                    this.handleOpenEditBoatModal(boat);
-                                                }
-                                            }
-                                        >Edit
-                                        </Badge>
-                                    </li>
-                                    <li>
-                                        <Badge
-                                            bg="danger"
-                                            onClick={
-                                                () => {
-                                                    this.deleteFunc(boat.id);
-                                                }
-                                            }
-                                        >Delete
-                                        </Badge>
-                                    </li>
-                                </ul>
+                                <Badge
+                                    bg="dark"
+                                    onClick={
+                                        () => {
+
+                                        }
+                                    }
+                                >Crew
+                                </Badge>
+                            </td>
+                            <td>
+                                <Badge
+                                    bg="warning"
+                                    onClick={
+                                        () => {
+                                            //this.handleOpenEditBoatModal(boat);
+                                        }
+                                    }
+                                >Edit
+                                </Badge>
+                            </td>
+                            <td>
+                                <Badge
+                                    bg="danger"
+                                    onClick={
+                                        () => {
+                                            //this.deleteFunc(boat.id);
+                                        }
+                                    }
+                                >Delete
+                                </Badge>
                             </td>
                         </tr>
                     )}
@@ -175,22 +181,19 @@ export class BoatsList extends Component<BoatProps, BoatState> {
             </div>
         );
     }
-    redirectToCrew(boat:Boat){
-        this.props.boatComponent.redirectToCrew(boat);
 
-    }
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderBoatsTable(this.state.boats);
+            : this.renderCrewMembersTable(this.state.crewMembers);
         return (
             <div>
                 <div>
                     <ReactModal
-                        isOpen={this.state.showAddBoatModal}
+                        isOpen={this.state.showAddCrewMemberModal}
                         contentLabel="Minimal Modal Example"
                     >
-                        <BoatAdd boatListRef = {this}/>
+                        <CrewAdd crewListRef={this}/>
                         <Button
                             id = "createModalCloseBtn"
                             variant="secondary"
@@ -207,15 +210,15 @@ export class BoatsList extends Component<BoatProps, BoatState> {
     }
 
     async populateBoatData() {
-
-        const response = await fetch('/api/boats/all');
-
+        console.log("Sending Request for crew")
+        const response = await fetch('/api/crew/all');
+        console.log(response)
         const data = await response.json();
         console.log(data)
         this.setState({
-            boats: data.result,
+            crewMembers: data.result,
             loading: false,
-            showAddBoatModal: false
+            showAddCrewMemberModal: false
         });
     }
 
